@@ -1,0 +1,9 @@
+langchain==0.1.1
+openai==1.9.0
+nbconvert
+python-dotenv==1.0.0
+langchain-openai
+chainlit
+uvicorn==0.25.0
+customtkinter==5.0.3
+plantuml
