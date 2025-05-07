@@ -5,21 +5,36 @@
 
  1. Clone the repository
  2. Open terminal and go to where repo was cloned.
+        
         cd <repo name>
+
  3. Run this command there
+
         python -m venv venv
+
  4. Then run this command to activate the virtual environment 
         For macOS/Linux:
-          source venv/bin/activate
+            
+            source venv/bin/activate
+
         For Windows (PowerShell)
-          .\venv\Scripts\Activate.ps1
+        
+            .\venv\Scripts\Activate.ps1
+        
         (If you get the error saying running scripts is disabled on this system… -> Run this command in the root folder in PowerShell)
+
             Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+
             (When prompted, type Y and press Enter.)
+
  5. To install dependencies run this command:
+        
         pip install -r requirements.txt
+
  6. Then this command to run the tool
+
         python gui.py
+ 
   
 # After setting up for the first time:
 1.  Navigate to your project folder
