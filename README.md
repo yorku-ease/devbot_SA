@@ -5,14 +5,14 @@
 
  1. Clone the repository
  2. Open terminal and go to where repo was cloned.
-        
+
         cd <repo name>
 
- 3. Run this command there
+ 4. Run this command there
 
         python -m venv venv
 
- 4. Then run this command to activate the virtual environment 
+ 5. Then run this command to activate the virtual environment 
         For macOS/Linux:
             
             source venv/bin/activate
@@ -27,11 +27,11 @@
 
             (When prompted, type Y and press Enter.)
 
- 5. To install dependencies run this command:
+ 6. To install dependencies run this command:
         
         pip install -r requirements.txt
 
- 6. Then this command to run the tool
+ 7. Then this command to run the tool
 
         python gui.py
  
