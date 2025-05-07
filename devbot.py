@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 import os, subprocess, platform
 from langchain_openai import ChatOpenAI
 from langchain.chains import LLMChain

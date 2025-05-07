@@ -1,129 +1,127 @@
-# Financial System Monitoring Investments - Software Specification Document
+# Software Specification Document for Example System
 
 ## 1. Purpose
-The objective of this software system is to facilitate continuous monitoring and management of investments for our clients. The system is mission-critical, requiring 100% availability and robust security to ensure data privacy and integrity alignment with client priorities.
+The purpose of this document is to provide a detailed plan for building a simple example software system. This system is designed as a means to verify the functionality of code. The document outlines the architecture, use cases, sequence diagrams, design decisions, and testing strategy for the system.
 
 ## 2. Sequence Diagrams
-For each of the identified use cases, corresponding sequence diagrams are prepared as follows:
 
-### Use Case 1: UC01 - Monitor Investment Portfolio
-```plantuml
+### Use Case 1: System Initialization
+- **Description**: The system starts and initializes necessary components.
+
+```plaintext
 @startuml
-actor Client
-participant "Investment Monitoring System" as IMS
-participant "Database" as DB
+actor User
+participant System
 
-Client -> IMS: Request portfolio overview
-IMS -> DB: Retrieve portfolio data
-DB --> IMS: Send portfolio data
-IMS --> Client: Display portfolio overview
+User -> System: Start
+System -> System: Initialize components
+System -> User: Confirmation
 @enduml
 ```
 
-### Use Case 2: UC02 - Update Investment Data
-```plantuml
-@startuml
-actor Admin
-participant "Investment Monitoring System" as IMS
-participant "Database" as DB
+### Use Case 2: Operation Execution
+- **Description**: The system executes a predefined operation upon user request.
 
-Admin -> IMS: Submit updated investment data
-IMS -> DB: Update data
-DB --> IMS: Confirmation of data update
-IMS --> Admin: Acknowledge successful update
+```plaintext
+@startuml
+actor User
+participant System as sys
+participant OperationHandler as opHandler
+
+User -> sys: Request operation execution
+sys -> opHandler: Execute operation
+opHandler -> sys: Operation result
+sys -> User: Display result
 @enduml
 ```
 
 ## 3. Major Design Decisions
-### Modularization Criteria:
-The system will be modularized around the main functionalities: Data Retrieval, Data Processing, and User Interface. Each module will have distinct responsibilities to minimize interdependencies, facilitating better cohesion and lower coupling.
-
-### Non-Functional Requirements:
-1. **Security**: As client data privacy is paramount, security measures including encryption and stringent authentication will be integral.
-2. **Reliability**: The system's design will focus on maintaining 100% availability through redundant systems and auto-recovery solutions.
+- **Cohesion and Coupling**: 
+  - The system will be designed to maximize cohesion within components by grouping related functionalities together. Coupling will be minimized by ensuring components interact through well-defined interfaces.
+- **Non-Functional Requirements**:
+  - *Reliability*: The system should maintain consistent operation even in edge cases.
+  - *Performance*: The system should execute operations with minimal latency.
 
 ## 4. Architecture
-### Architectural Patterns:
-The system adopts a microservices architecture. This approach aligns with our need to scale individual components independently and maintain continuous availability. Each service will handle a specific aspect of the investment monitoring process, offering scalability and fault isolation.
+The architecture of the system employs the Layered Pattern to separate concerns and improve maintainability. The system is divided into three primary layers: Presentation, Business Logic, and Data Access. Communication between layers is strictly organized to ensure smooth interactions.
 
-Additionally, a layered architecture will be applied, segmenting responsibilities into distinct layers (UI, Business Logic, and Data Access), promoting a clean separation of concerns and enhanced manageability.
+### Paragraph 1: Architectural Patterns
+The chosen architectural pattern is the Layered Pattern. This pattern allows the system to organize code logically and separate concerns, which improves maintainability and scalability. By dividing functionalities across multiple layers, changes in one layer (e.g., data access) do not directly affect the others, promoting modularization.
 
-### Component Decomposition:
-```plantuml
+### Paragraph 2: Initial Decomposition
+The system is decomposed into the following modules: User Interface, Operation Handler, and Data Manager. Each module performs specific roles: the User Interface manages interactions with the user, the Operation Handler executes user requests, and the Data Manager handles data storage and retrieval.
+
+```plaintext
 @startuml
-package "Financial Monitoring System" {
-  [User Interface] --> [Investment Service]
-  [Investment Service] --> [Data Access Layer]
-  [Data Access Layer] --> [Database]
+package "Presentation Layer" {
+  [User Interface]
 }
+
+package "Business Logic Layer" {
+  [Operation Handler]
+}
+
+package "Data Access Layer" {
+  [Data Manager]
+}
+
+[User Interface] --> [Operation Handler] : Execute
+[Operation Handler] --> [Data Manager] : Query
 
 @enduml
 ```
 
-- **User Interface**: Manages interactions between the user and the system, providing a dashboard for portfolio monitoring.
-- **Investment Service**: Contains the business logic for processing investment data and invoking necessary computations.
-- **Data Access Layer**: Handles all database interactions, ensuring data integrity and secure storage.
-- **Database**: Stores all investment and user data securely.
-
-### Exposed Interfaces:
-- **Investment Service Interface**:
-  - `getPortfolioData()`: Retrieves investment portfolio data.
-  - `updateInvestmentDetails()`: Updates investment details in the database.
-  
-- **Data Access Layer Interface**:
-  - `queryDatabase()`: Executes a query against the database.
-  - `updateDatabaseEntry()`: Performs an update operation on the database.
+### Component Functions and Interfaces
+- **User Interface**:
+  - *DisplayPrompt()*: Displays user prompts.
+  - *ShowResult(result)*: Shows the result to the user.
+- **Operation Handler**:
+  - *ExecuteOperation()*: Handles execution of the requested operation.
+- **Data Manager**:
+  - *RetrieveData()*: Retrieves necessary data for operations.
 
 ## 5. Use of Design Patterns
-- **Singleton Pattern** for `Database Connection`: Ensures a single database connection instance, reducing overhead and maintaining consistency.
-- **Observer Pattern** for `Portfolio Updates`: Notify users of updates to their monitored portfolios in real-time.
+- **MVC (Model-View-Controller)**: This pattern is used to separate internal representations from the way information is presented to and accepted from the user. It increases modularity and allows multiple views to represent the same data.
+- **Singleton Pattern**: Employed in the Data Manager to ensure that a single instance of data access logic is used throughout the system, which conserves resources and ensures consistency.
 
 ## 6. Detailed Class Diagrams
-### User Interface Component
-```plantuml
+
+```plaintext
 @startuml
 class UserInterface {
-  +displayPortfolio()
-  +initiateUpdate()
+  +DisplayPrompt()
+  +ShowResult(result)
 }
-@enduml
-```
 
-### Investment Service Component
-```plantuml
-@startuml
-class InvestmentService {
-  +getPortfolioData()
-  +updateInvestmentDetails()
+class OperationHandler {
+  +ExecuteOperation()
 }
-@enduml
-```
 
-### Data Access Layer Component
-```plantuml
-@startuml
-class DataAccessLayer {
-  +queryDatabase()
-  +updateDatabaseEntry()
+class DataManager {
+  +RetrieveData()
 }
+
+UserInterface --> OperationHandler
+OperationHandler --> DataManager
 @enduml
 ```
 
 ## 7. Test Driven Development
+
 ### Test Case 1
-1. **Test ID**: TC01  
-2. **Category**: Portfolio Data Retrieval  
-3. **Initial Condition**: System is operational and database is accessible.  
+1. **Test ID**: TC_01
+2. **Category**: System Initialization
+3. **Initial Condition**: System is not running.
 4. **Procedure**:
-   - Initiate a request for portfolio data from the client interface.
-   - System processes the request and queries the database.
-5. **Expected Outcome**: Portfolio data is correctly displayed to the client.
+   - Start the system.
+   - Check system log for initialization message.
+5. **Expected Outcome**: System initializes and logs a confirmation message.
 
 ### Test Case 2
-1. **Test ID**: TC02  
-2. **Category**: Data Update Validation  
-3. **Initial Condition**: Admin is logged in and has access rights.  
+1. **Test ID**: TC_02
+2. **Category**: Operation Execution
+3. **Initial Condition**: System is running and ready.
 4. **Procedure**:
-   - Admin submits updated investment data through the system interface.
-   - System processes and updates the data in the database.
-5. **Expected Outcome**: Confirmation message of successful update is displayed to Admin.
+   - Send an operation execution request.
+   - Verify the correctness of the response.
+5. **Expected Outcome**: Correct operation results are displayed to the user.
