@@ -1,6 +1,7 @@
 langchain==0.3.25
 nbconvert
 python-dotenv==1.0.0
+langchain-groq==0.3.2
 langchain-openai==0.3.16
 uvicorn==0.25.0
 customtkinter==5.2.2
