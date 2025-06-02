@@ -35,7 +35,9 @@ class App(customtkinter.CTk):
         self.models_label.grid(row=3, column=0, padx=20, pady=(10, 0))
 
         self.models_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame,
-                                                 values=["gpt-4o", "gpt-4o-mini", "o1-preview", "o1-mini",
+                                                 values=["gpt-4o", "gpt-4o-mini", "o3", "o1",
+                                                         "meta-llama/llama-4-maverick-17b-128e-instruct",
+                                                         "gemini-2.0-flash", "gemini-1.5-pro", 
                                                          "llama-3.3-70b-versatile", "llama-3.1-8b-instant",
                                                          "llama-guard-3-8b", "llama3-70b-8192",
                                                          "llama3-8b-8192", "gemma2-9b-it"])
@@ -45,7 +47,7 @@ class App(customtkinter.CTk):
         self.docs_label.grid(row=5, column=0, padx=20, pady=(10, 0))
 
         self.docs_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame,
-                                                 values=["SDD", "Details"])
+                                                 values=["SDD", "Details", "Zero-Shot", "In-Context", "Chain-of-Thought"])
         self.docs_optionemenu.grid(row=6, column=0, padx=20, pady=(10, 5))
 
         self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
@@ -104,9 +106,14 @@ class App(customtkinter.CTk):
         """
         # get directory where script is downloaded to create output file
         script_dir = os.path.dirname(os.path.realpath(__file__))
-        name = ("api_key" if
-                self.models_optionemenu.get() in ["gpt-4o", "gpt-4o-mini", "o1-preview", "o1-mini"]
-                else "groq_api_key")
+        name= ''
+        if self.models_optionemenu.get() in ["gpt-4o", "gpt-4o-mini", "o3", "o1"]:
+            name = 'openai_api_key'
+        elif self.models_optionemenu.get() in ["gemini-2.0-flash", "gemini-1.5-pro"]:
+            name = 'google_api_key'
+        else:
+            name = 'groq_api_key'
+
         api_file = os.path.join(script_dir, name)
         with open(api_file, "w") as f:
             f.write(api_key)

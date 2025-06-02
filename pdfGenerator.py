@@ -38,9 +38,14 @@ def parse_text_file(file_path, script_dir):
 
             # Generate diagram and add it as an image
             diagram_count += 1
-            diagram_file = os.path.join(script_dir, f"diagram_{diagram_count}.png")
-            plantuml_code_str = "\n".join(plantuml_code)
+            diagram_file = os.path.join(script_dir, f"diagram_{diagram_count}.png") # f"diagram_{diagram_count}.png"
+            diagram_txt_file = os.path.join(script_dir, f"diagram_{diagram_count}.puml") # f"diagram_{diagram_count}.txt"
 
+            plantuml_code_str = "\n".join(plantuml_code)
+            # Generate text file with PlantUML code
+            with open(diagram_txt_file, "w") as txt_file:
+                txt_file.write(plantuml_code_str)
+            
             # Generate the PlantUML diagram
             with open(diagram_file, "wb") as f:
                 f.write(plantuml_server.processes(plantuml_code_str))
@@ -72,14 +77,14 @@ def parse_text_file(file_path, script_dir):
     
     return elements
     
-def generate_pdf(gptOutput, script_dir):
+def generate_pdf(gptOutput, script_dir, fileName):
     """
     Reads a structured text file and generates a PDF from it.
     """
     # Parse the text file into PDF elements
     content = parse_text_file(gptOutput, script_dir)
     # Create the PDF document with the name of document and size
-    doc = SimpleDocTemplate("Software Design document.pdf", pagesize=letter)
+    doc = SimpleDocTemplate(fileName, pagesize=letter)
     
     # Define a title style for the document title
     title_style = ParagraphStyle(
@@ -98,7 +103,7 @@ def generate_pdf(gptOutput, script_dir):
     doc.build(content)
 
     # delete the diagram files that were generated
-    for diagram_file in os.listdir(script_dir):
-        if diagram_file.startswith("diagram") and diagram_file.endswith(".png"):
-            os.remove(os.path.join(script_dir, diagram_file))
+    #for diagram_file in os.listdir(script_dir):
+    #    if diagram_file.startswith("diagram") and diagram_file.endswith(".png"):
+    #        os.remove(os.path.join(script_dir, diagram_file))
 
