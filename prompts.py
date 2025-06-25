@@ -70,7 +70,7 @@ I am providing the description of a system we want to design. Create a high-leve
 1. Consider the functional and non-functional requirements of the system.
 2. Consider some main use cases of the system.
 3. Use your domain knowledge about the system and come up with a domain model.
-4. Using the domain modal, generate the high level architecture of the system, leaving out any low level implementation and technology specific details. 
+4. Using the domain modal, generate the high level architecture of the system that adheres to architecture styles and software design principles, leaving out any low level implementation and technology specific details. 
 The description is as follows
 System: {description}
 Answer:"""

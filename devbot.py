@@ -43,13 +43,12 @@ def query_llm(description, model, docType):
         fileName = 'Software Architecture Chain of Thought.pdf'
     #query the chosen large language model and get the output.
     output = llm_chain.invoke({'description': description})['text']
-
     # get directory where script is downloaded to create output file
     script_dir = os.path.dirname(os.path.realpath(__file__))
     output_file = os.path.join(script_dir, "output")
 
     # write llm output to the a file to read later
-    with open(output_file, "w") as file:
+    with open(output_file, "w", encoding="utf-8") as file:
         file.write(output)
 
     

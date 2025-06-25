@@ -18,7 +18,7 @@ def parse_text_file(file_path, script_dir):
     list_item_style = ParagraphStyle(name="List", parent=styles['BodyText'], bulletIndent=10)
 
     plantuml_server = PlantUML(url='http://www.plantuml.com/plantuml/img/')
-    with open(file_path, "r") as file:
+    with open(file_path, "r", encoding="utf-8") as file:
         lines = file.readlines()
     
     plantuml_code = []
