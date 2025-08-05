@@ -27,6 +27,7 @@ from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import SystemMessage, HumanMessage, AIMessage
 from langchain.prompts import PromptTemplate
+from langchain.chains import LLMChain
 
 # ---------- Constants ----------------------------------------------------
 
@@ -50,6 +51,8 @@ def load_api_key_from_file(filename):
     """
     script_dir = os.path.dirname(os.path.realpath(__file__))
     api_file = os.path.join(script_dir, filename)
+    if not os.path.exists(api_file):
+        raise FileNotFoundError(f"API key file '{filename}' not found. Enter you API key")
     with open(api_file, "r") as f:
         api_key = f.read().strip()
     return api_key
@@ -77,7 +80,7 @@ def select_llm(model: str):
 # ---------- Message construction ----------------------------------------
 
 def build_messages(doc_type: str, previous_ai_reply: Optional[str] = None,
-    refinement: Optional[str] = None,):
+    refinement: Optional[str] = None):
     """Return a list[BaseMessage] for the current LLM call."""
     if doc_type not in _DOC_CONFIG:
         raise ValueError(f"Unknown docType '{doc_type}'. Expected one of: {list(_DOC_CONFIG)}")
@@ -172,7 +175,7 @@ def query_llm(
         # ----------------------------------------
         # FIRST TURN – use LLMChain & PromptTemplate
         # ----------------------------------------
-        prompt_tpl: PromptTemplate = _DOC_TYPE_PROMPT[doc_type]
+        prompt_tpl, _ = _DOC_CONFIG[doc_type]
         if prompt_tpl is None:
             raise RuntimeError(f"PromptTemplate for '{doc_type}' not found in globals().")
 
@@ -184,10 +187,10 @@ def query_llm(
         # CONTINUATION – refine previous answer
         # ----------------------------------------
         previous_text = _OUTPUT_FILE.read_text(encoding="utf-8")
-        if not refinement:
-            raise ValueError("'refinement' message required when continue_chat=True")
+        # if not refinement:
+        #     raise ValueError("'refinement' message required when continue_chat=True")
 
-        messages = build_messages(doc_type, previous_text, refinement)
+        messages = build_messages(doc_type, previous_text, description)
         reply_text = llm.invoke(messages).content  # type: ignore[attr-defined]    
 
 

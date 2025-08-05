@@ -2,6 +2,7 @@ import customtkinter
 import tkinter.filedialog
 import os
 import devbot
+import devbot_assistant
 
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("green")
@@ -50,11 +51,11 @@ class App(customtkinter.CTk):
                                                  values=["SDD", "Details", "Zero-Shot", "In-Context", "Chain-of-Thought"])
         self.docs_optionemenu.grid(row=6, column=0, padx=20, pady=(10, 5))
 
-        self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
-        self.appearance_mode_label.grid(row=7, column=0, padx=20, pady=(10, 0))
-        self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["Light", "Dark", "System"],
-                                                                       command=self.change_appearance_mode_event)
-        self.appearance_mode_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 5))
+        self.continue_chat_label = customtkinter.CTkLabel(self.sidebar_frame, text="Continue Chat:", anchor="w")
+        self.continue_chat_label.grid(row=7, column=0, padx=20, pady=(10, 0))
+        self.continue_chat_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["Yes", "No"]) #command=self.change_appearance_mode_event
+        self.continue_chat_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 5))
+       
         self.scaling_label = customtkinter.CTkLabel(self.sidebar_frame, text="UI Scaling:", anchor="w")
         self.scaling_label.grid(row=9, column=0, padx=20, pady=(10, 0))
         self.scaling_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["80%", "90%", "100%", "110%", "120%"],
@@ -75,9 +76,10 @@ class App(customtkinter.CTk):
         self.textbox.grid(row=0, column=1, columnspan=3, padx=(0, 0), pady=(0, 0), sticky="nsew")
 
         # set default values
-        self.appearance_mode_optionemenu.set("Dark")
+        self.continue_chat_optionemenu.set("No")
         self.scaling_optionemenu.set("120%")
         self.textbox.insert("0.0", "Devbot to generate Software Architecture powered by ChatGPT, Llama, and more.\n\n")
+        self.textbox.insert("end", "Enter API keys for OPENAI, GoogleAI and Groq before Continuing.\n\n")
 
     def home_button_event(self):
         print("Home button pressed")
@@ -97,7 +99,7 @@ class App(customtkinter.CTk):
 
     def save_login_button_event(self):
         self.store_api_key_to_file(self.usertoken_entry.get())
-        self.textbox.insert("end", "Access token saved.\n")
+        self.textbox.insert("end", "API Key saved.\n")
         self.window.destroy()
 
     def store_api_key_to_file(self, api_key):
@@ -122,12 +124,21 @@ class App(customtkinter.CTk):
         description = self.description_entry.get("1.0", "end").strip()
         model = self.models_optionemenu.get()
         docType = self.docs_optionemenu.get()
-        devbot.query_llm(description, model, docType)
+        continueChat = True if self.continue_chat_optionemenu.get() == "Yes" else False
+        #devbot.query_llm(description, model, docType)
+        try:
+            devbot_assistant.query_llm(description, model, docType, continueChat)
+            self.textbox.insert("end", "✅ System design document created for the given system.\n\n")
+        except FileNotFoundError as e:
+            self.textbox.insert("end", f"❌ Error: {str(e)}\n\n")
+        except RuntimeError as e:
+            self.textbox.insert("end", f"❌ Runtime error: {str(e)}\n\n")
+        except Exception as e:
+            self.textbox.insert("end", f"❌ Unexpected error: {str(e)}\n\n")
 
-        self.textbox.insert("end", "System design document created for the given system\n")
-
-    def change_appearance_mode_event(self, new_appearance_mode):
-        customtkinter.set_appearance_mode(new_appearance_mode)
+    def change_continue_chat_event(self, new_appearance_mode):
+        pass
+    #     customtkinter.set_appearance_mode(new_appearance_mode)
 
 
     def change_scaling_event(self, new_scaling):

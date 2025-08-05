@@ -45,10 +45,12 @@ def parse_text_file(file_path, script_dir):
             # Generate text file with PlantUML code
             with open(diagram_txt_file, "w") as txt_file:
                 txt_file.write(plantuml_code_str)
-            
-            # Generate the PlantUML diagram
-            with open(diagram_file, "wb") as f:
-                f.write(plantuml_server.processes(plantuml_code_str))
+                        
+            try:
+                with open(diagram_file, "wb") as f:
+                    f.write(plantuml_server.processes(plantuml_code_str))
+            except Exception as e:
+                raise RuntimeError(f"Failed to generate PlantUML diagram {diagram_file}: {e}")
 
             # Add the image to the PDF elements
             elements.append(Image(diagram_file, width=400, height=300))  # Adjust size as needed
@@ -83,24 +85,23 @@ def generate_pdf(gptOutput, script_dir, fileName):
     """
     # Parse the text file into PDF elements
     content = parse_text_file(gptOutput, script_dir)
-    # Create the PDF document with the name of document and size
-    doc = SimpleDocTemplate(fileName, pagesize=letter)
-    
-    # Define a title style for the document title
-    title_style = ParagraphStyle(
-        name="Title",
-        fontSize=24,        # Larger font size
-        leading=28,
-        fontName="Helvetica-Bold",
-        alignment=TA_CENTER  # Center align the title
-    )
-    
-    # Add the title as the first element in the content
-    content.insert(0, Paragraph("Software Design Document", title_style))
-    content.insert(1, Spacer(1, 20))  # Add space after the title
 
-    # create the document with the rest of the formatted information
-    doc.build(content)
+    try:
+        doc = SimpleDocTemplate(fileName, pagesize=letter)
+        # Define a title style for the document title
+        title_style = ParagraphStyle(
+            name="Title",
+            fontSize=24,        # Larger font size
+            leading=28,
+            fontName="Helvetica-Bold",
+            alignment=TA_CENTER  # Center align the title
+        )
+         # Add the title as the first element in the content
+        content.insert(0, Paragraph("Software Design Document", title_style))
+        content.insert(1, Spacer(1, 20))  # Add space after the title
+        doc.build(content)
+    except Exception as e:
+        return f"❌ Failed to generate PDF document: {str(e)}"
 
     # delete the diagram files that were generated
     #for diagram_file in os.listdir(script_dir):
