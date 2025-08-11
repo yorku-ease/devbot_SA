@@ -1,9 +1,9 @@
 import customtkinter
 import tkinter.filedialog
 import os
-import devbot
-import devbot_assistant
-
+# import devbot
+# import devbot_assistant
+from . import devbot_assistant
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("green")
 
@@ -80,7 +80,6 @@ class App(customtkinter.CTk):
         self.scaling_optionemenu.set("120%")
         self.textbox.insert("0.0", "Devbot to generate Software Architecture powered by ChatGPT, Llama, and more.\n\n")
         self.textbox.insert("end", "Enter API keys for OPENAI, GoogleAI and Groq before Continuing.\n\n")
-
     def home_button_event(self):
         print("Home button pressed")
 
@@ -145,6 +144,9 @@ class App(customtkinter.CTk):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
 
-if __name__ == "__main__":
+def main():
     app = App()
     app.mainloop()
+
+if __name__ == "__main__":
+    main()

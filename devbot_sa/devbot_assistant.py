@@ -18,10 +18,10 @@ from __future__ import annotations
 import os, platform, subprocess
 from pathlib import Path
 from typing import Optional, Dict
-import pdfGenerator
-from prompts import SYSTEM_PROMPT
-from prompts import software_architecture_assistant_prompt_1, software_architecture_assistant_prompt_2
-from prompts import software_architecture_zero_shot_prompt, software_architecture_in_context_prompt, software_architecture_chain_of_thought_prompt
+from . import pdfGenerator
+from .prompts import SYSTEM_PROMPT
+from .prompts import software_architecture_assistant_prompt_1, software_architecture_assistant_prompt_2
+from .prompts import software_architecture_zero_shot_prompt, software_architecture_in_context_prompt, software_architecture_chain_of_thought_prompt
 from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -46,9 +46,9 @@ _DOC_CONFIG: Dict[str, tuple[PromptTemplate, str]] = {
 }
 # --- Load API KEY ---- 
 def load_api_key_from_file(filename):
-    """
-    Reads the API key from a file and returns it.
-    """
+    
+    #Reads the API key from a file and returns it.
+    
     script_dir = os.path.dirname(os.path.realpath(__file__))
     api_file = os.path.join(script_dir, filename)
     if not os.path.exists(api_file):
@@ -81,7 +81,8 @@ def select_llm(model: str):
 
 def build_messages(doc_type: str, previous_ai_reply: Optional[str] = None,
     refinement: Optional[str] = None):
-    """Return a list[BaseMessage] for the current LLM call."""
+
+    #Return a list[BaseMessage] for the current LLM call.
     if doc_type not in _DOC_CONFIG:
         raise ValueError(f"Unknown docType '{doc_type}'. Expected one of: {list(_DOC_CONFIG)}")
 
@@ -107,7 +108,7 @@ def build_messages(doc_type: str, previous_ai_reply: Optional[str] = None,
 # ---------- File helpers -------------------------------------------------
 
 def write_output(text: str) -> None:
-    """Persist *text* to the shared output file for future chat turns."""
+    #Persist *text* to the shared output file for future chat turns.
     _OUTPUT_FILE.write_text(text, encoding="utf-8")
 
 
@@ -121,11 +122,12 @@ def read_previous_output() -> Optional[str]:
 # ---------- PDF helpers --------------------------------------------------
 
 def _generate_and_open_pdf(pdf_name: str) -> None:
-    """Generate a PDF from `_OUTPUT_FILE` and open it with the OS viewer."""
+    #Generate a PDF from `_OUTPUT_FILE` and open it with the OS viewer.
+
     pdfGenerator.generate_pdf(str(_OUTPUT_FILE), str(_SCRIPT_DIR), pdf_name)
 
     original_cwd = os.getcwd()
-    os.chdir(_SCRIPT_DIR)
+    #os.chdir(_SCRIPT_DIR)
     try:
         if platform.system() == "Windows":
             os.startfile(pdf_name)  # type: ignore[attr-defined]
