@@ -3,9 +3,9 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "devbot_sa"
+name = "genai4sa"
 version = "0.1.0"
-description = "A developer assistant bot"
+description = "A software architecture generation tool using LLMs"
 authors = [{ name="Hashim Khan", email="hashimahmedkhan2002@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.8"
@@ -26,4 +26,4 @@ dependencies = [
 ]
 
 [project.scripts]
-devbot_sa = "devbot_sa.gui:main"
+genai4sa = "devbot_sa.gui:main"
