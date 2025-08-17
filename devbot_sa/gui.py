@@ -44,11 +44,11 @@ class App(customtkinter.CTk):
                                                          "llama3-8b-8192", "gemma2-9b-it"])
         self.models_optionemenu.grid(row=4, column=0, padx=20, pady=(10, 5))
 
-        self.docs_label = customtkinter.CTkLabel(self.sidebar_frame, text="Docs:", anchor="w")
+        self.docs_label = customtkinter.CTkLabel(self.sidebar_frame, text="Prompt:", anchor="w")
         self.docs_label.grid(row=5, column=0, padx=20, pady=(10, 0))
 
         self.docs_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame,
-                                                 values=["SDD", "Details", "Zero-Shot", "In-Context", "Chain-of-Thought"])
+                                                 values=["Zero-Shot", "In-Context", "Chain-of-Thought", "SDD", "Details"])
         self.docs_optionemenu.grid(row=6, column=0, padx=20, pady=(10, 5))
 
         self.continue_chat_label = customtkinter.CTkLabel(self.sidebar_frame, text="Continue Chat:", anchor="w")
