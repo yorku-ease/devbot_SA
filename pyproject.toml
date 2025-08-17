@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "genai4sa"
-version = "0.1.1"
+version = "0.1.4"
 description = "A software architecture generation tool using LLMs"
 authors = [{ name="Hashim Khan", email="hashimahmedkhan2002@gmail.com" }]
 readme = "README.md"
