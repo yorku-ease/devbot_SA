@@ -10,17 +10,18 @@
         4. Input the textual description of the system. 
         5. Press Generate and wait for the PDF to open. The PDF will be saved in the current working directory from where you ran the tool.
         6. If you want to continue the conversation and iterate over the LLM respond, set Continue Conversation to Yes, and enter the prompt in Textbox and Press Generate.
-# Steps to run locally the first time
 
-        1. Clone the repository
+# How to download the library and run the tool:
+        1. Install with this command (enter in command prompt/terminal):
+            pip install genai4sa
+        2. Run with this command:
+            genai4sa
+
+# Steps to run locally to Contribute to the Project
+        1. Clone the repository at https://github.com/yorku-ease/devbot_SA
         2. Open terminal and go to where repo was cloned.
-
                 cd <repo name>
-
         3. Run this command there
-
                 pip install -e .
-
         4. Then enter this command to run the program
-
-                devbot_sa
+                genai4sa
