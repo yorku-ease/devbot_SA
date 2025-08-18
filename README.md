@@ -1,6 +1,8 @@
 # GenAI-for-SA
  A tool to generate software design document using LLM models and different prompting techniques.
 
+[![PyPi](https://img.shields.io/pypi/v/GenAI4SA.svg)](https://pypi.org/project/genai4sa/)
+[![Downloads](https://static.pepy.tech/badge/GenAI4SA)](https://pypi.org/project/genai4sa/)
 ![alt text](<Screenshot 2025-08-17 183501.png>)
 
 # How to use the tool:
