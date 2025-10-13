@@ -46,6 +46,11 @@ _DOC_CONFIG: Dict[str, tuple[str, str]] = {
     "In-Context":   (software_architecture_in_context_template,  "Software Architecture In Context.pdf"),
     "Chain-of-Thought": (software_architecture_chain_of_thought_template,     "Software Architecture Chain of Thought.pdf"),
 }
+def available_models():
+    return ["gpt-4o", "gpt-4o-mini", "o3", "o1", "gpt-5", "openai/gpt-oss-20b", "openai/gpt-oss-120b",
+            "meta-llama/llama-4-maverick-17b-128e-instruct", "gemini-2.0-flash", "gemini-2.5-pro", "gemini-2.5-flash",
+             "llama-3.3-70b-versatile", "llama-3.1-8b-instant", "llama-guard-3-8b", "llama3-70b-8192", "llama3-8b-8192"]
+
 # Store Api Key to File
 def store_api_key_to_file(provider, api_key):
         """
@@ -86,7 +91,7 @@ def select_llm(model: str, temperature: Optional[float] = None):
         api_key = load_api_key_from_file("openai_api_key")
         return ChatOpenAI(api_key=api_key, model=model, temperature=temp)
 
-    if model in {"gemini-2.0-flash", "gemini-1.5-pro"}:
+    if model in {"gemini-2.0-flash", "gemini-2.5-pro", "gemini-2.5-flash"}:
         api_key = load_api_key_from_file("google_api_key")
         return ChatGoogleGenerativeAI(
             model=model,
