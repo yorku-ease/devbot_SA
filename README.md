@@ -31,7 +31,17 @@
 # How to run locally
         1. Open terminal and go to where repo was cloned.
                 cd <repo name>
-        2. Run this command there
+        2. Run this command there (Only when running the First Time, Skip to 3rd step otherwise)
+                python -m venv venv
+        3. Then run this command to activate the virtual environment
+                For macOS/Linux:
+                        source venv/bin/activate
+                For Windows (PowerShell)
+                        .\venv\Scripts\Activate.ps1
+                (If you get the error saying running scripts is disabled on this system… -> Run this command in the root folder in PowerShell)
+                        Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+                (When prompted, type Y and press Enter.) 
+        4. Run this command there
                 pip install -e .
-        3. Then enter this command to run the program
+        5. Then enter this command to run the program
                 genai4sa

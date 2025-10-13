@@ -36,7 +36,8 @@ class App(customtkinter.CTk):
         self.models_label.grid(row=3, column=0, padx=20, pady=(10, 0))
 
         self.models_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame,
-                                                 values=["gpt-4o", "gpt-4o-mini", "o3", "o1",
+                                                 values=["gpt-4o", "gpt-4o-mini", "o3", "o1", "gpt-5",
+                                                         "openai/gpt-oss-20b", "openai/gpt-oss-120b",
                                                          "meta-llama/llama-4-maverick-17b-128e-instruct",
                                                          "gemini-2.0-flash", "gemini-1.5-pro", 
                                                          "llama-3.3-70b-versatile", "llama-3.1-8b-instant",
@@ -87,37 +88,42 @@ class App(customtkinter.CTk):
         print("Sign in press")
         self.window = customtkinter.CTkToplevel(self)
         self.window.title("Sign In")
-        self.window.geometry("340x145")
+        self.window.geometry("360x190")
+        self.window.grab_set()  # focus the login dialog
+
+        provider_label = customtkinter.CTkLabel(self.window, text="Provider:", anchor="w")
+        provider_label.grid(row=0, column=0, padx=(20, 0), pady=(20, 0), sticky="nsew")
+
+        self.provider_optionemenu = customtkinter.CTkOptionMenu(
+            self.window, values=["OpenAI", "Google", "Groq"])
+        
+        self.provider_optionemenu.grid(row=0, column=1, padx=(20, 20), pady=(20, 0), sticky="nsew")
+        self.provider_optionemenu.set("OpenAI")
 
         self.usertoken_label = customtkinter.CTkLabel(self.window, text="Access Token:", anchor="w")
-        self.usertoken_label.grid(row=0, column=0, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.usertoken_label.grid(row=1, column=0, padx=(20, 0), pady=(20, 0), sticky="nsew")
         self.usertoken_entry = customtkinter.CTkEntry(self.window) # contains the access token of user
-        self.usertoken_entry.grid(row=0, column=1, padx=(20, 20), pady=(20, 0), sticky="nsew")
+        self.usertoken_entry.grid(row=1, column=1, padx=(20, 20), pady=(20, 0), sticky="nsew")
         self.save_button = customtkinter.CTkButton(self.window, text="Save", command=self.save_login_button_event)
         self.save_button.grid(row=5, column=0, columnspan=2, padx=(20, 20), pady=(20, 20), sticky="nsew")
 
     def save_login_button_event(self):
-        self.store_api_key_to_file(self.usertoken_entry.get())
-        self.textbox.insert("end", "API Key saved.\n")
-        self.window.destroy()
+        provider = self.provider_optionemenu.get() if self.provider_optionemenu else "OpenAI"
+        api_key = self.usertoken_entry.get().strip() if self.usertoken_entry else ""
 
-    def store_api_key_to_file(self, api_key):
-        """
-        Writes the API key to a file.
-        """
-        # get directory where script is downloaded to create output file
-        script_dir = os.path.dirname(os.path.realpath(__file__))
-        name= ''
-        if self.models_optionemenu.get() in ["gpt-4o", "gpt-4o-mini", "o3", "o1"]:
-            name = 'openai_api_key'
-        elif self.models_optionemenu.get() in ["gemini-2.0-flash", "gemini-1.5-pro"]:
-            name = 'google_api_key'
-        else:
-            name = 'groq_api_key'
-
-        api_file = os.path.join(script_dir, name)
-        with open(api_file, "w") as f:
-            f.write(api_key)
+        if not api_key:
+            self.textbox.insert("end", "❌ Please enter a non-empty API key.\n")
+            return
+        try:
+            devbot_assistant.store_api_key_to_file(provider, api_key)
+            self.textbox.insert("end", f"✅ {provider} API Key saved.\n")
+            if self.window:
+                self.window.destroy()
+        except Exception as e:
+            self.textbox.insert("end", f"❌ Error saving key: {e}\n")
+        # self.store_api_key_to_file(self.usertoken_entry.get())
+        # self.textbox.insert("end", "API Key saved.\n")
+        # self.window.destroy()
 
     def send_request(self):
         description = self.description_entry.get("1.0", "end").strip()
@@ -126,7 +132,7 @@ class App(customtkinter.CTk):
         continueChat = True if self.continue_chat_optionemenu.get() == "Yes" else False
         #devbot.query_llm(description, model, docType)
         try:
-            devbot_assistant.query_llm(description, model, docType, continueChat)
+            devbot_assistant.generate_architecture(description, model, docType, continueChat)
             self.textbox.insert("end", "✅ System design document created for the given system.\n\n")
         except FileNotFoundError as e:
             self.textbox.insert("end", f"❌ Error: {str(e)}\n\n")

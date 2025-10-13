@@ -3,7 +3,44 @@ from langchain.prompts import PromptTemplate
 SYSTEM_PROMPT = (
     "You are a software architecture assistant chatbot named 'Devbot'. Your expertise is exclusively in designing software systems."
     "Only Answer questions about software architecture and design."
-    "When you draw diagrams, use PlantUML syntax, except when stated otherwise.")
+    "When you draw diagrams, use PlantUML syntax, except when stated otherwise. "
+    "For PlantUML keep everything in a single package, Define Components like this '[Label] as Alias' and Connections like this 'Alias1 --> Alias2'. Do not include any comments in the PlantUML diagram")
+
+software_architecture_zero_shot_template = """ 
+I am providing the description of a system we want to design. Create a high-level architecture for the system. Create a PlantUML component diagram to model the architecture.
+The description is as follows
+System: {description}
+Answer:"""
+
+# software_architecture_zero_shot_prompt = PromptTemplate(
+#     input_variables=["description"],
+#     template=software_architecture_zero_shot_template
+# )
+software_architecture_in_context_template = """ 
+I am providing the description of a system we want to design. Create a high-level architecture for the system. Create a PlantUML component diagram to model the architecture.
+Context: You are a software architect experienced in designing and implementing software systems in different domains given their descriptions. The attached text gives the description and core functionality of a software system. Generate an architecture for this system that: 1. Adheres to architecture styles and software design principles 2. Keep the archtiecture high level, excluding any implementation and technology specific details.
+The description is as follows
+System: {description}
+Answer:"""
+
+# software_architecture_in_context_prompt = PromptTemplate(
+#     input_variables=["description"],
+#     template=software_architecture_in_context_template
+# )
+software_architecture_chain_of_thought_template = """ 
+I am providing the description of a system we want to design. Create a high-level architecture for the system. Create a PlantUML component diagram to model the architecture by following these steps:
+1. Consider the functional and non-functional requirements of the system.
+2. Consider some main use cases of the system.
+3. Use your domain knowledge about the system and come up with a domain model.
+4. Using the domain modal, generate the high level architecture of the system that adheres to architecture styles and software design principles, leaving out any low level implementation and technology specific details. 
+The description is as follows
+System: {description}
+Answer:"""
+
+# software_architecture_chain_of_thought_prompt = PromptTemplate(
+#     input_variables=["description"],
+#     template=software_architecture_chain_of_thought_template
+# )
 
 software_architecture_assistant_template_1 = """
 You are a software architecture assistant chatbot named "Devbot". Your expertise is exclusively in designing software systems. 
@@ -48,39 +85,4 @@ Answer:"""
 software_architecture_assistant_prompt_2 = PromptTemplate(
     input_variables=["description"],
     template=software_architecture_assistant_template_2
-)
-software_architecture_zero_shot_template = """ 
-I am providing the description of a system we want to design. Create a high-level architecture for the system. Create a PlantUML component diagram (keep everything in a single package, Define Components like this "[Label] as Alias" and Connections like this "Alias1 --> Alias2" ) to model the architecture.
-The description is as follows
-System: {description}
-Answer:"""
-
-software_architecture_zero_shot_prompt = PromptTemplate(
-    input_variables=["description"],
-    template=software_architecture_zero_shot_template
-)
-software_architecture_in_context_template = """ 
-I am providing the description of a system we want to design. Create a high-level architecture for the system. Create a PlantUML component diagram (keep everything in a single package, Define Components like this "[Label] as Alias" and Connections like this "Alias1 --> Alias2" ) to model the architecture.
-Context: You are a software architect experienced in designing and implementing software systems in different domains given their descriptions. The attached text gives the description and core functionality of a software system. Generate an architecture for this system that: 1. Adheres to architecture styles and software design principles 2. Keep the archtiecture high level, excluding any implementation and technology specific details.
-The description is as follows
-System: {description}
-Answer:"""
-
-software_architecture_in_context_prompt = PromptTemplate(
-    input_variables=["description"],
-    template=software_architecture_in_context_template
-)
-software_architecture_chain_of_thought_template = """ 
-I am providing the description of a system we want to design. Create a high-level architecture for the system. Create a PlantUML component diagram (keep everything in a single package, Define Components like this "[Label] as Alias" and Connections like this "Alias1 --> Alias2" ) to model the architecture by following these steps:
-1. Consider the functional and non-functional requirements of the system.
-2. Consider some main use cases of the system.
-3. Use your domain knowledge about the system and come up with a domain model.
-4. Using the domain modal, generate the high level architecture of the system that adheres to architecture styles and software design principles, leaving out any low level implementation and technology specific details. 
-The description is as follows
-System: {description}
-Answer:"""
-
-software_architecture_chain_of_thought_prompt = PromptTemplate(
-    input_variables=["description"],
-    template=software_architecture_chain_of_thought_template
 )

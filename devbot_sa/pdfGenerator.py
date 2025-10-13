@@ -27,7 +27,7 @@ def parse_text_file(file_path, script_dir):
 
     for line in lines:
         line = line.strip()
-        
+        line = line.replace('<br>', '')
         # Handle PlantUML blocks
         if line.startswith("@startuml"):
             in_plantuml_block = True
@@ -43,7 +43,7 @@ def parse_text_file(file_path, script_dir):
 
             plantuml_code_str = "\n".join(plantuml_code)
             # Generate text file with PlantUML code
-            with open(diagram_txt_file, "w") as txt_file:
+            with open(diagram_txt_file, "w", encoding="utf-8") as txt_file:
                 txt_file.write(plantuml_code_str)
                         
             try:
