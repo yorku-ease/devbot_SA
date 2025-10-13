@@ -31,7 +31,7 @@
 # How to run locally
         1. Open terminal and go to where repo was cloned.
                 cd <repo name>
-        2. Run this command there (Only when running the First Time, Skip to 3rd step otherwise)
+        2. Run this command there to create a virtual environment (Only when running the First Time, Skip to 3rd step otherwise)
                 python -m venv venv
         3. Then run this command to activate the virtual environment
                 For macOS/Linux:
