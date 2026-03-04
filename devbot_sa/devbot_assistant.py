@@ -46,6 +46,8 @@ _DOC_CONFIG: Dict[str, tuple[str, str]] = {
     "In-Context":   (software_architecture_in_context_template,  "Software Architecture In Context.pdf"),
     "Chain-of-Thought": (software_architecture_chain_of_thought_template,     "Software Architecture Chain of Thought.pdf"),
 }
+
+
 def available_models():
     return ["gpt-4o", "gpt-4o-mini", "o3", "o1", "gpt-5", "openai/gpt-oss-20b", "openai/gpt-oss-120b",
             "meta-llama/llama-4-maverick-17b-128e-instruct", "gemini-2.0-flash", "gemini-2.5-pro", "gemini-2.5-flash",
@@ -83,6 +85,10 @@ def load_api_key_from_file(filename):
     with open(api_file, "r") as f:
         api_key = f.read().strip()
     return api_key
+
+
+
+    
 # ---------- LLM selection ------------------------------------------------
 def select_llm(model: str, temperature: Optional[float] = None):
     """Return the correct LangChain chat‑model instance for *model*."""

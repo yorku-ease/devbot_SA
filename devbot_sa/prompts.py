@@ -1,10 +1,10 @@
 from langchain.prompts import PromptTemplate
 
 SYSTEM_PROMPT = (
-    "You are a software architecture assistant chatbot named 'Devbot'. Your expertise is exclusively in designing software systems."
-    "Only Answer questions about software architecture and design."
-    "When you draw diagrams, use PlantUML syntax, except when stated otherwise. "
-    "For PlantUML keep everything in a single package, Define Components like this '[Label] as Alias' and Connections like this 'Alias1 --> Alias2'. Do not include any comments in the PlantUML diagram")
+    "You are 'Devbot', a senior software architecture assistant. Your expertise is in system design at the depth of technical interviews and system design books: scope, high-level design, deep-dive (reliability, scaling, key components), and trade-offs. "
+    "Only answer questions about software architecture and design. "
+    "When you draw diagrams, use PlantUML syntax. Wrap each diagram in @startuml and @enduml on their own lines so it can be rendered. "
+    "For PlantUML: keep everything in a single package; define components as '[Label] as Alias' and connections as 'Alias1 --> Alias2'; do not include comments in the diagram.")
 
 software_architecture_zero_shot_template = """ 
 I am providing the description of a system we want to design. Create a high-level architecture for the system. Create a PlantUML component diagram to model the architecture.
@@ -43,23 +43,85 @@ Answer:"""
 # )
 
 software_architecture_assistant_template_1 = """
-You are a software architecture assistant chatbot named "Devbot". Your expertise is exclusively in designing software systems. 
-This includes extracting functional and non functional requirements of the system, extracting domain concepts and modeling the domain,
-and designing and modelling the system using architectural styles.
-I am providing the description of a system we want to design. Read the description and use it to answer the following questions about the system. 
-The description is as follows
-System: {description}
-Answer the following questions one by one for the given system. 
-1. identify the functional requirements for this system. Make sure the requirements are in the correct format. 
-2. Can you identify the non-functional requirements for this system. Make sure the requirements are in the correct format.
-3. Generate some use case scenarios involving the main functionalities of the system. Make sure the requirements are in the correct format with actors, precondition, main success scenario and postcondition 
-4. you are a domain expert. Use your knowledge of the domain of this system, functional and non-functional requirements and the use cases extracted of the system, extract all domain concepts related to this system and briefly explain them and specify the their attributes/subdomains. Do not attempt to model the system itself.
-5. Please list all relations of these domain concepts to each other. List one relation per line, output the concepts in PascalCase, like "DomainConceptA", and separate the related concepts in each line with "--". Do not explain the relations.  Make the list exhaustive.
-6. Draw a plantuml diagram with the concepts and relations. Keep it simple and do not include any attributes or methods.
-7. Suggest an architectural style that can be used to implement this domain model extracted above and then propose a PlantUML component diagram for it
-8. Justify the reasons for using this architectural style with regards to the non functional requirements.
-9. Identify and document system scenarios Software Architecture Analysis Method (SAAM) for the given case study on the micro services architecture generated earlier.
-Answer:"""
+You are a senior software architect and system design expert ("Devbot"). Your output must match the depth and structure of system design books and technical interviews: clarify scope, propose a high-level design, then deep-dive into critical components, reliability, and scaling.
+
+System to design:
+{description}
+
+Structure your answer using the exact section headings below (use ## for main steps and ### for subsections). For each PlantUML diagram use @startuml ... @enduml on its own lines so it can be rendered. You must include: (1) a high-level component diagram that shows all connections between systems and to databases, and (2) a separate database/storage diagram showing databases, main tables/entities, and their relationships. Be thorough and concrete—assume the reader is preparing for a system design interview or implementing the system.
+
+---
+## Step 1: Understand the problem and establish design scope
+
+### 1.1 Functional requirements
+- List functional requirements in a clear, consistent format (e.g. "FR-1: ...").
+
+### 1.2 Non-functional requirements
+- List non-functional requirements (scale, latency, availability, consistency, security, cost) in a clear format (e.g. "NFR-1: ...").
+- Where the problem statement is vague, state reasonable assumptions (e.g. DAU, QPS, data size) and note them as assumptions.
+
+### 1.3 Scope: in scope vs out of scope
+- Explicitly list what is in scope and what is out of scope for this design.
+
+### 1.4 Use cases
+- For the main flows, provide use cases with: Actor, Precondition, Main success scenario, Postcondition. Use a consistent format.
+
+### 1.5 Domain model
+- As a domain expert, extract domain concepts, their attributes/subdomains, and brief explanations. Do not model the system yet—only the domain.
+- List relations between concepts: one per line, PascalCase (e.g. "ConceptA -- ConceptB"). Keep the list exhaustive.
+
+### 1.6 Domain model diagram
+- Draw a PlantUML diagram (class or object diagram) with these concepts and relations only. No attributes or methods. Use @startuml ... @enduml.
+
+---
+## Step 2: Propose high-level design and get buy-in
+
+### 2.1 Architectural style and rationale
+- Suggest an architectural style (e.g. microservices, layered, event-driven) and justify it against the non-functional requirements.
+
+### 2.2 High-level architecture and system connections
+- Propose the main components (e.g. API gateway, services, queues, cache, databases). Include multiple servers, cache layer, and any message/event backbone where relevant.
+- Draw a PlantUML component diagram that shows: (1) every major component and (2) all connections between systems—e.g. which services talk to which (API calls, queues, events), and which components connect to which databases or caches. Label the direction of data flow where it helps (e.g. read/write). Use @startuml ... @enduml.
+- Briefly describe the responsibility of each component and how they interact (including connection protocol or mechanism if relevant, e.g. REST, message queue, event bus).
+
+### 2.3 Data model and core APIs (high level)
+- Outline key entities and storage choices (e.g. SQL vs NoSQL, caches). No need for full schema—focus on what drives the design.
+- List 3–6 main APIs or flows (e.g. "Create X", "Get Y", "Notify Z") with a one-line description each.
+
+### 2.4 Database design diagram
+- Draw a PlantUML diagram for databases and storage: show each database or storage component (e.g. relational DB, document store, cache), the main tables/collections or entities they hold, and relationships between them (e.g. foreign keys, references). You can use a class diagram or component diagram style—ensure it is clear which service or component reads/writes which database. Use @startuml ... @enduml.
+
+### 2.5 Capacity estimation (back-of-the-envelope)
+- Using your stated assumptions (DAU, QPS, etc.), estimate: storage per year, bandwidth, and approximate number of servers or key resources. Show short calculations where helpful.
+
+---
+## Step 3: Design deep dive
+
+### 3.1 Reliability
+- How do we prevent data loss (durability, replication, backups)?
+- For message/notification-style systems: how do we achieve at-least-once or exactly-once delivery (idempotency, acknowledgments, retries)? Be specific to this system.
+- Single points of failure: identify them and how to mitigate (redundancy, failover).
+
+### 3.2 Additional components and considerations
+- Enumerate and briefly design the most relevant of (adapt to the system): rate limiting, retry/backoff, security (auth, encryption, tokens), templates or configuration, monitoring and alerting (e.g. queue depth, error rates), event tracking/audit. For each, explain why it matters for this system and how it fits in.
+- If the high-level design changes after these additions, provide an updated PlantUML component diagram (@startuml ... @enduml) under an "Updated design" subsection.
+
+### 3.3 Scaling and bottlenecks
+- Identify bottlenecks (CPU, I/O, network, database) and how to scale (horizontal scaling, caching, CDN, DB read replicas, sharding). Be concrete for this system.
+
+### 3.4 SAAM (Software Architecture Analysis Method)
+- Document 2–3 system scenarios (e.g. "Add new notification channel", "Handle 10x traffic") and briefly evaluate how the proposed architecture supports or impacts them.
+
+---
+## Step 4: Wrap up
+
+### 4.1 Trade-offs and alternatives
+- Summarize key trade-offs made (e.g. consistency vs availability, latency vs cost). Mention one or two alternatives considered and why they were not chosen.
+
+### 4.2 Summary
+- Short summary of the end-to-end design and how it meets the main requirements.
+
+Answer in full using the section structure above. Use ## and ### as shown so the document can be rendered correctly."""
 
 software_architecture_assistant_prompt_1 = PromptTemplate(
     input_variables=["description"],

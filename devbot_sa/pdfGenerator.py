@@ -85,7 +85,7 @@ def generate_pdf(gptOutput, script_dir, fileName):
     """
     # Parse the text file into PDF elements
     content = parse_text_file(gptOutput, script_dir)
-    # pdf_path = os.path.join(script_dir, fileName)
+    # pdf_path = os.path.join(script_dir, fileName) 
     try:
         doc = SimpleDocTemplate(fileName, pagesize=letter)
         # Define a title style for the document title

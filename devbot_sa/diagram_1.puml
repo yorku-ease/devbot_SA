@@ -1,0 +1,20 @@
+@startuml
+package "Notification System" {
+[Event Source] as EventSource
+[Message Queue] as MsgQueue
+[Notification Service] as NotifyService
+[Channel Provider] as ChannelProvider
+[Preference Management] as PrefMgmt
+[Template Engine] as TemplateEngine
+[Scheduler] as Scheduler
+[Database] as DB
+
+EventSource --> MsgQueue
+MsgQueue --> NotifyService
+NotifyService --> ChannelProvider
+NotifyService --> PrefMgmt
+NotifyService --> TemplateEngine
+Scheduler --> NotifyService
+NotifyService --> DB
+}
+@enduml
