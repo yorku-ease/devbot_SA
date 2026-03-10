@@ -1,4 +1,4 @@
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 
 SYSTEM_PROMPT = (
     "You are 'Devbot', a senior software architecture assistant. Your expertise is in system design at the depth of technical interviews and system design books: scope, high-level design, deep-dive (reliability, scaling, key components), and trade-offs. "

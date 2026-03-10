@@ -4,6 +4,7 @@ python-dotenv==1.0.0
 langchain-google-genai
 langchain-groq==0.3.2
 langchain-openai==0.3.16
+langchain-anthropic
 uvicorn==0.25.0
 customtkinter==5.2.2
 plantuml

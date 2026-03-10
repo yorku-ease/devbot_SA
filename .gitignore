@@ -8,3 +8,4 @@ google_api_key
 dist/
 devbot_sa.egg-info/
 output
+NIPS-2017-attention-is-all-you-need-Paper.pdf

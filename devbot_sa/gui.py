@@ -39,10 +39,13 @@ class App(customtkinter.CTk):
                                                  values=["gpt-4o", "gpt-4o-mini", "o3", "o1", "gpt-5",
                                                          "openai/gpt-oss-20b", "openai/gpt-oss-120b",
                                                          "meta-llama/llama-4-maverick-17b-128e-instruct",
-                                                         "gemini-2.0-flash", "gemini-2.5-pro", "gemini-2.5-flash", 
+                                                         "gemini-2.0-flash", "gemini-2.5-pro", "gemini-2.5-flash",
                                                          "llama-3.3-70b-versatile", "llama-3.1-8b-instant",
                                                          "llama-guard-3-8b", "llama3-70b-8192",
-                                                         "llama3-8b-8192", "gemma2-9b-it"])
+                                                         "llama3-8b-8192", "gemma2-9b-it",
+                                                         "claude-opus-4-5", "claude-sonnet-4-5", "claude-haiku-4-5",
+                                                         "claude-3-5-sonnet-20241022", "claude-3-5-haiku-20241022",
+                                                         "claude-3-opus-20240229"])
         self.models_optionemenu.grid(row=4, column=0, padx=20, pady=(10, 5))
 
         self.docs_label = customtkinter.CTkLabel(self.sidebar_frame, text="Prompt:", anchor="w")
@@ -95,7 +98,7 @@ class App(customtkinter.CTk):
         provider_label.grid(row=0, column=0, padx=(20, 0), pady=(20, 0), sticky="nsew")
 
         self.provider_optionemenu = customtkinter.CTkOptionMenu(
-            self.window, values=["OpenAI", "Google", "Groq"])
+            self.window, values=["OpenAI", "Google", "Groq", "Anthropic"])
         
         self.provider_optionemenu.grid(row=0, column=1, padx=(20, 20), pady=(20, 0), sticky="nsew")
         self.provider_optionemenu.set("OpenAI")
