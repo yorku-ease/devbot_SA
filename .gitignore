@@ -1,10 +1,12 @@
 venv/
+.venv/
 __pycache__/
 *.pyc
 .env
 openai_api_key
 groq_api_key
 google_api_key
+anthropic_api_key
 dist/
 devbot_sa.egg-info/
 output

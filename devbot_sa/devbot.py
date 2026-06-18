@@ -2,6 +2,7 @@ import os, subprocess, platform
 from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_anthropic import ChatAnthropic
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from prompts import software_architecture_assistant_prompt_1, software_architecture_assistant_prompt_2
@@ -18,6 +19,9 @@ def query_llm(description, model, docType):
     elif model in ["gemini-2.0-flash", "gemini-1.5-pro"]: 
         google_api_key = load_api_key_from_file('google_api_key')
         llm = ChatGoogleGenerativeAI(model=model, google_api_key=google_api_key, temperature=1, top_p=0.8)
+    elif model in ["claude-opus-4-8", "claude-sonnet-4-6", "claude-haiku-4-5"]: 
+        anthropic_api_key = load_api_key_from_file('anthropic_api_key')
+        llm = ChatAnthropic(model=model, anthropic_api_key=anthropic_api_key, temperature=1)
     else:
         groq_api_key = load_api_key_from_file('groq_api_key')
         llm = ChatGroq(api_key=groq_api_key, model_name=model, temperature=1, top_p=0.8)

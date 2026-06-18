@@ -25,6 +25,7 @@ from .prompts import software_architecture_zero_shot_template, software_architec
 from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain.schema import SystemMessage, HumanMessage, AIMessage
@@ -49,7 +50,8 @@ _DOC_CONFIG: Dict[str, tuple[str, str]] = {
 def available_models():
     return ["gpt-4o", "gpt-4o-mini", "o3", "o1", "gpt-5", "openai/gpt-oss-20b", "openai/gpt-oss-120b",
             "meta-llama/llama-4-maverick-17b-128e-instruct", "gemini-2.0-flash", "gemini-2.5-pro", "gemini-2.5-flash",
-             "llama-3.3-70b-versatile", "llama-3.1-8b-instant", "llama-guard-3-8b", "llama3-70b-8192", "llama3-8b-8192"]
+             "llama-3.3-70b-versatile", "llama-3.1-8b-instant", "llama-guard-3-8b", "llama3-70b-8192", "llama3-8b-8192",
+             "claude-opus-4-8", "claude-sonnet-4-6", "claude-haiku-4-5"]
 
 # Store Api Key to File
 def store_api_key_to_file(provider, api_key):
@@ -64,6 +66,8 @@ def store_api_key_to_file(provider, api_key):
             filename = "openai_api_key"
         elif provider == "google":
             filename = "google_api_key"
+        elif provider == "anthropic":
+            filename = "anthropic_api_key"
         elif provider == "groq":
             filename = "groq_api_key"
 
@@ -99,7 +103,13 @@ def select_llm(model: str, temperature: Optional[float] = None):
             temperature=temp,
             top_p=0.8,
         )
-
+    if model in {"claude-opus-4-8", "claude-sonnet-4-6", "claude-haiku-4-5"}:
+        api_key = load_api_key_from_file("anthropic_api_key")
+        return ChatAnthropic(
+            model=model,
+            anthropic_api_key=api_key,
+            temperature=temp
+        )
     # Fallback: Groq Llama / Mixtral / etc.
 
     api_key = load_api_key_from_file("groq_api_key")

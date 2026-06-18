@@ -42,7 +42,9 @@ class App(customtkinter.CTk):
                                                          "gemini-2.0-flash", "gemini-2.5-pro", "gemini-2.5-flash", 
                                                          "llama-3.3-70b-versatile", "llama-3.1-8b-instant",
                                                          "llama-guard-3-8b", "llama3-70b-8192",
-                                                         "llama3-8b-8192", "gemma2-9b-it"])
+                                                         "llama3-8b-8192", "gemma2-9b-it",
+                                                         "claude-opus-4-8", "claude-sonnet-4-6", 
+                                                         "claude-haiku-4-5"])
         self.models_optionemenu.grid(row=4, column=0, padx=20, pady=(10, 5))
 
         self.docs_label = customtkinter.CTkLabel(self.sidebar_frame, text="Prompt:", anchor="w")
@@ -80,7 +82,7 @@ class App(customtkinter.CTk):
         self.continue_chat_optionemenu.set("No")
         self.scaling_optionemenu.set("120%")
         self.textbox.insert("0.0", "Devbot to generate Software Architecture powered by ChatGPT, Llama, and more.\n\n")
-        self.textbox.insert("end", "Enter API keys for OPENAI, GoogleAI and Groq before Continuing.\n\n")
+        self.textbox.insert("end", "Enter API keys for OPENAI, GoogleAI, Anthropic, and Groq before Continuing.\n\n")
     def home_button_event(self):
         print("Home button pressed")
 
@@ -95,7 +97,7 @@ class App(customtkinter.CTk):
         provider_label.grid(row=0, column=0, padx=(20, 0), pady=(20, 0), sticky="nsew")
 
         self.provider_optionemenu = customtkinter.CTkOptionMenu(
-            self.window, values=["OpenAI", "Google", "Groq"])
+            self.window, values=["OpenAI","Anthropic", "Google", "Groq"])
         
         self.provider_optionemenu.grid(row=0, column=1, padx=(20, 20), pady=(20, 0), sticky="nsew")
         self.provider_optionemenu.set("OpenAI")
